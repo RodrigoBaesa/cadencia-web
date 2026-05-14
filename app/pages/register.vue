@@ -3,6 +3,8 @@ import { z } from 'zod';
 import PasswordInput from '@/components/register/PasswordInput.vue'
 import UsernameInput from '~/components/register/UsernameInput.vue';
 
+const toast = useToast()
+
 const schema = z.object({
   name: z.string().min(4, 'Username must be at least 4 characters').max(16, 'Username must be at most 16 characters'),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -13,9 +15,9 @@ const schema = z.object({
 })
 
 const formState = reactive({
-  name:'',
-  email:'',
-  password:''
+  name: '',
+  email: '',
+  password: ''
 })
 
 async function registerUser(event) {
@@ -26,14 +28,22 @@ async function registerUser(event) {
     })
 
     console.log('User registered successfully:', response)
-    alert('Registration successful! Please log in.')
+    toast.add({
+      title: 'Registration Successful',
+      description: 'Your account has been created successfully. You can now log in.',
+      color: 'success',
+    })
+
     await navigateTo('/login')
   } catch (error) {
     console.error("Error registering user:", error)
-    alert('Error registering user. Please try again.')
+    toast.add({
+      title: 'Registration Failed',
+      description: 'An error ocurred while registering. Please try again.',
+      color: 'error',
+    })
   }
 }
-
 </script>
 
 <template>
