@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const show = ref(false)
-const password = ref('')
+const model = defineModel<string>({default: ''})
 
 function checkStrength(str: string) {
   const requirements = [
@@ -13,7 +13,7 @@ function checkStrength(str: string) {
   return requirements.map(req => ({ met: req.regex.test(str), text: req.text }))
 }
 
-const strength = computed(() => checkStrength(password.value))
+const strength = computed(() => checkStrength(model.value))
 const score = computed(() => strength.value.filter(req => req.met).length)
 
 const color = computed(() => {
@@ -34,9 +34,10 @@ const text = computed(() => {
 
 <template>
   <div class="space-y-2">
+    <!-- <UFormField name="password" label="Password"> -->
     <UFormField label="Password">
       <UInput
-        v-model="password"
+        v-model="model"
         placeholder="Password"
         :color="color"
         :type="show ? 'text' : 'password'"

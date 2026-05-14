@@ -1,9 +1,37 @@
 <script setup>
+import { z } from 'zod';
 import PasswordInput from '@/components/register/PasswordInput.vue'
 import UsernameInput from '~/components/register/UsernameInput.vue';
 
-const handleSubmit = async () => {
-  await navigateTo('/login')
+const schema = z.object({
+  name: z.string().min(4, 'Username must be at least 4 characters').max(16, 'Username must be at most 16 characters'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
+    .regex(/\d/, 'Password must contain at least one number')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+})
+
+const formState = reactive({
+  name:'',
+  email:'',
+  password:''
+})
+
+async function registerUser(event) {
+  try {
+    const response = await $fetch('http://localhost:8080/users', {
+      method: 'POST',
+      body: event.data
+    })
+
+    console.log('User registered successfully:', response)
+    alert('Registration successful! Please log in.')
+    await navigateTo('/login')
+  } catch (error) {
+    console.error("Error registering user:", error)
+    alert('Error registering user. Please try again.')
+  }
 }
 
 </script>
@@ -13,21 +41,21 @@ const handleSubmit = async () => {
 
     <div class="flex flex-col justify-center px-8 sm:px-16 lg:px-24">
       
-      <UForm @submit="handleSubmit">
+      <UForm :schema="schema" :state="formState" @submit="registerUser" class="w-full">
         <div class="w-full max-w-md mx-auto">
           <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white flex justify-center">Create Account</h1>
 
           <div class="flex flex-col gap-4">
             
-              <UsernameInput/>
+              <UsernameInput v-model="formState.name"/>
 
-              <UFormField label="Email" description="We'll never share your email with anyone else.">
-                <UInput placeholder="Enter your email" class="w-full" />
+              <UFormField name="email" label="Email" description="We'll never share your email with anyone else.">
+                <UInput v-model="formState.email" placeholder="Enter your email" class="w-full" required/>
               </UFormField>
 
-              <PasswordInput/>
+              <PasswordInput v-model="formState.password"/>
 
-              <UButton type="submit" color="primary" class="flex flex-col" nuxtlink="/login">Sign Up</UButton>
+              <UButton type="submit" color="primary" class="flex flex-col">Sign Up</UButton>
 
               <NuxtLink to="/login" class="flex flex-col justify-center text-sm text-center text-gray-600 dark:text-gray-400 hover:underline">
                 Already have an account? Log in

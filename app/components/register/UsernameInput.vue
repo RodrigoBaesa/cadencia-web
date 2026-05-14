@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const value = ref('')
+const model = defineModel<string>({default: ''})
 const maxLength = 16
 </script>
 
 <template>
-    <UFormField label="Username" description="Choose a unique username for your account.">
+    <UFormField name="name" label="Username" description="Choose a unique username for your account.">
         <UInput
-            v-model="value"
+            v-model="model"
             :maxlength="maxLength"
             aria-describedby="character-count"
             :ui="{ trailing: 'pointer-events-none' }"
@@ -20,7 +20,7 @@ const maxLength = 16
                 aria-live="polite"
                 role="status"
             >
-                {{ value?.length }}/{{ maxLength }}
+                {{ model?.length }}/{{ maxLength }}
             </div>
             </template>
         </UInput>
