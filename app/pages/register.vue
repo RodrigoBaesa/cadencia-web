@@ -6,7 +6,7 @@ import UsernameInput from '~/components/register/UsernameInput.vue';
 const toast = useToast()
 
 const schema = z.object({
-  name: z.string().min(4, 'Username must be at least 4 characters').max(16, 'Username must be at most 16 characters'),
+  name: z.string().min(2, 'Username must be at least 4 characters').max(16, 'Username must be at most 16 characters'),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters')
     .regex(/\d/, 'Password must contain at least one number')
@@ -34,13 +34,15 @@ async function registerUser(event) {
       color: 'success',
     })
 
-    await navigateTo('/login')
+    await navigateTo('/register')
   } catch (error) {
-    console.error("Error registering user:", error)
+    const errorMessage = error.data?.message || 'An error occurred while registering. Please try again.'
+
     toast.add({
       title: 'Registration Failed',
-      description: 'An error ocurred while registering. Please try again.',
+      description: errorMessage,
       color: 'error',
+      icon: 'i-lucide-circle-x'
     })
   }
 }
