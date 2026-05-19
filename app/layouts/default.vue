@@ -71,5 +71,7 @@ const items: NavigationMenuItem[] = [
         </main>
     </div>
 
+    <NavbarMobileBottomNav :items="items" />
+
   </div>
 </template>
