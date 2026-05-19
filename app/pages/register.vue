@@ -27,14 +27,13 @@ async function registerUser(event) {
       body: event.data
     })
 
-    console.log('User registered successfully:', response)
     toast.add({
       title: 'Registration Successful',
       description: 'Your account has been created successfully. You can now log in.',
       color: 'success',
     })
 
-    await navigateTo('/register')
+    await navigateTo('/login')
   } catch (error) {
     const errorMessage = error.data?.message || 'An error occurred while registering. Please try again.'
 
@@ -79,7 +78,10 @@ async function registerUser(event) {
 
     <div class="hidden md:flex bg-linear-to-l from-purple-500 items-center justify-center p-12">
     <!-- <div class="hidden md:flex bg-gray-50 dark:bg-gray-900 items-center justify-center p-12"> -->
-      
+      <div class="text-center text-white">
+        <h2 class="text-4xl font-bold mb-4">Welcome to Cadencia</h2>
+        <p class="text-lg">Gamify your music theory journey!</p>
+      </div>
     </div>
   </div>
 </template>
