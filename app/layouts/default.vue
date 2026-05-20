@@ -10,7 +10,6 @@ const items: NavigationMenuItem[] = [
     { label: 'Daily', icon: 'i-lucide-calendar', to: '/daily' },
     { label: 'Battle', icon: 'i-lucide-sword', to: '/battle' },
     { label: 'Profile', icon: 'i-lucide-user', to: '/profile' }
-
 ]
 
 </script>
@@ -36,7 +35,7 @@ const items: NavigationMenuItem[] = [
       <template #header>
         <!-- <UIcon name="i-logos-nuxt-icon" class="size-8" /> -->
         <div class="w-full text-center font-bold text-2xl text-primary">
-            Cadência
+          <h1>Cadencia</h1>
         </div>
       </template>
 
@@ -51,7 +50,7 @@ const items: NavigationMenuItem[] = [
       class="flex-1 flex flex-col overflow-hidden lg:peer-data-[variant=floating]:my-4 peer-data-[variant=inset]:m-4 lg:peer-data-[variant=inset]:not-peer-data-[collapsible=offcanvas]:ms-0 peer-data-[variant=inset]:rounded-xl peer-data-[variant=inset]:shadow-sm peer-data-[variant=inset]:ring peer-data-[variant=inset]:ring-default bg-default"
     >
       <div
-        class="hidden md:flex h-(--ui-header-height) shrink-0 items-center px-4"
+        class="flex h-(--ui-header-height) shrink-0 items-center px-4"
         :class="[
           variant !== 'floating' && 'border-b border-default',
           side === 'right' && 'justify-end'
@@ -59,11 +58,20 @@ const items: NavigationMenuItem[] = [
       >
         <UButton
           :icon="side === 'left' ? 'i-lucide-panel-left' : 'i-lucide-panel-right'"
+          class="hidden md:flex"
           color="neutral"
           variant="ghost"
           aria-label="Toggle sidebar"
           @click="open = !open"
         />
+
+        <div class="ml-auto m-1 text-primary">
+          <UButton variant="ghost" to="/streak">
+            <span class="flex text-lg font-bold">0</span>
+            <UIcon name="i-lucide-flame" class="size-10 mb-1" />
+          </UButton>
+        </div>
+
       </div>
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
