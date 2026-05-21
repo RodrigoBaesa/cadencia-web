@@ -75,7 +75,9 @@ const items: NavigationMenuItem[] = [
       </div>
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
+          <div class="flex justify-center">
             <slot></slot>
+          </div>
         </main>
     </div>
 
