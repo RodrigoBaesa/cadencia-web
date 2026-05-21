@@ -3,6 +3,10 @@ import { z } from 'zod';
 import PasswordInput from '@/components/register/PasswordInput.vue'
 import UsernameInput from '~/components/register/UsernameInput.vue';
 
+definePageMeta({
+    layout: false
+})
+
 const toast = useToast()
 
 const schema = z.object({
