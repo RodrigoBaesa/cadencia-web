@@ -47,7 +47,7 @@ watch(() => props.notes, () => {
 </script>
 
 <template>
-  <div class="flex justify-center bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+  <div class="flex justify-center bg-white dark:bg-gray-300 rounded-xl p-4 shadow-sm">
     <div ref="output"></div>
   </div>
 </template>
