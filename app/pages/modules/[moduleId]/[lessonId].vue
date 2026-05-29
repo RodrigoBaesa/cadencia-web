@@ -25,8 +25,8 @@ const lessonId = route.params.lessonId
   }
 } */
 
-const lesson = {
-    id: "lesson-1",
+/* const lesson = {
+    id: "lesson-2",
     title: "A Pauta e a Clave de Sol",
     type: "PRACTICE",
     content: {
@@ -43,6 +43,21 @@ const lesson = {
             clef: "treble",
             timeSignature: "4/4",
         },
+  }
+} */
+
+const lesson = {
+  id: "lesson-3",
+  title: "Identify the Clef",
+  type: "QUIZ",
+  content: {
+    question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc efficitur varius. Sed at felis a enim efficitur commodo. Proin ac ligula a nisl efficitur tincidunt. Curabitur ut odio sed metus efficitur fermentum.",
+    options: [
+      { text: "Treble Clef", isCorrect: false },
+      { text: "Bass Clef", isCorrect: true },
+      { text: "Alto Clef", isCorrect: false }
+    ],
+    rewardXp: 100
   }
 }
 
@@ -75,9 +90,19 @@ function checkAnswer(answer: string) {
         feedbackMessage.value = "Try again!"
     }
 }
+
+function checkQuizAnswer(isCorrect: boolean) {
+    feedbackMessage.value = isCorrect ? "Correct" : "Try again!"
+    if (isCorrect) {
+        setTimeout(() => {
+            isFinished.value = true
+            feedbackMessage.value = ""
+        }, 1200)
+    }
+}
 </script>
 <template>
-    <UCard>
+    <UCard class="h-full flex flex-col">
         <template #header>
             <h2 class="text-2xl font-bold">{{ lesson.title }}</h2>
             <p class="text-sm text-gray-500">{{ lesson.type }}</p>
@@ -111,13 +136,34 @@ function checkAnswer(answer: string) {
                         </div>
                         <div v-if="isFinished" class="flex flex-col items-center">
                             <UButton @click="currentNoteIndex = 0; isFinished = false; feedbackMessage = ''; shuffledOptions = [...lesson.content.options].sort(() => Math.random() - 0.5)" class="opacity-50 ">Play again</UButton>
-                            <UButton to="/modules" class="m-2">Back to Modules</UButton>
+                            <UButton to="/" class="m-2">Back to Modules</UButton>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
             <p class="text-sm text-gray-500 flex">Reward:<p class="ml-1 text-primary">{{ lesson.content.rewardXp }} XP</p></p>
+        </div>
+
+        <div v-if="lesson.type === 'QUIZ'">
+            <p>{{ lesson.content.question }}</p>
+            <div class="flex flex-col items-center my-5">
+                <div>
+                    <p v-if="isFinished" class="text-gray-500">Lesson completed! You've earned <span class="text-primary">{{ lesson.content.rewardXp }} XP!</span></p>
+                    <p v-if="feedbackMessage === '' && !isFinished" class="text-gray-500"> Select the correct note.</p>
+                    <p v-if="feedbackMessage === 'Correct'" class="text-green-500">{{ feedbackMessage }}</p>
+                    <p v-if="feedbackMessage === 'Try again!'" class="text-red-500">{{ feedbackMessage }}</p>
+                </div>
+                 
+                <div v-if="!isFinished">
+                    <UButton v-for="option in lesson.content.options" :key="option.text" class="m-2" @click="checkQuizAnswer(option.isCorrect)">
+                        {{ option.text }}
+                    </UButton>
+                </div>
+                <div v-if="isFinished">
+                    <UButton to="/" class="m-2">Back to Modules</UButton>
+                </div>
+            </div>
         </div>
     </UCard>
 </template>
