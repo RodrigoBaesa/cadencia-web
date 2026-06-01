@@ -4,14 +4,15 @@ const route = useRoute()
 const moduleId = route.params.moduleId
 const lessonId = route.params.lessonId
 
-/* const lesson = {
+const lesson = {
     id: "lesson-1",
     title: "A Pauta e a Clave de Sol",
     type: "THEORY",
+    nextLessonId: "lesson-2",
     content: {
         text: "A pauta musical é formada por 5 linhas e 4 espaços. A Clave de Sol define que a nota na segunda linha é o Sol.A pauta musical é formada por 5 linhas e 4 espaços. A Clave de Sol define que a nota na segunda linha é o Sol.A pauta musical é formada por 5 linhas e 4 espaços. A Clave de Sol define que a nota na segunda linha é o Sol.A pauta musical é formada por 5 linhas e 4 espaços. A Clave de Sol define que a nota na segunda linha é o Sol.",
         imageUrl: "/images/clef-explanation.png",
-        vexFlowExample: {
+        vexFlowData: {
             notes: [
                 { keys: ["c/4"], duration: "q" },
                 { keys: ["d/4"], duration: "q" },
@@ -23,7 +24,7 @@ const lessonId = route.params.lessonId
         },
         hasAudioExample: true,
   }
-} */
+}
 
 /* const lesson = {
     id: "lesson-2",
@@ -46,7 +47,7 @@ const lessonId = route.params.lessonId
   }
 } */
 
-const lesson = {
+/* const lesson = {
   id: "lesson-3",
   title: "Identify the Clef",
   type: "QUIZ",
@@ -59,9 +60,9 @@ const lesson = {
     ],
     rewardXp: 100
   }
-}
+} */
 
-const currentNoteIndex = ref(0)
+/* const currentNoteIndex = ref(0)
 const isFinished = ref(false)
 const feedbackMessage = ref("")
 const shuffledOptions = ref([...lesson.content.options].sort(() => Math.random() - 0.5))
@@ -99,6 +100,14 @@ function checkQuizAnswer(isCorrect: boolean) {
             feedbackMessage.value = ""
         }, 1200)
     }
+} */
+
+async function goToNextLesson() {
+    if (lesson.nextLessonId) {
+        await navigateTo(`/${moduleId}/${lesson.nextLessonId}`)
+    } else {
+        await navigateTo(`/modules/${moduleId}`)
+    }
 }
 </script>
 <template>
@@ -110,9 +119,10 @@ function checkQuizAnswer(isCorrect: boolean) {
         <div v-if="lesson.type === 'THEORY'">
             <p>{{ lesson.content.text }}</p>
             <img :src="lesson.content.imageUrl" alt="Lesson image" class="mx-auto block max-w-full my-4 rounded" />
+            <UButton @click="goToNextLesson">{{ lesson.nextLessonId ? 'Next Lesson' : 'Back to Modules' }}</UButton>
         </div>
 
-        <div v-if="lesson.type === 'PRACTICE'">
+        <!-- <div v-if="lesson.type === 'PRACTICE'">
             <p>{{ lesson.content.instruction }}</p>
             <div class="flex flex-col justify-center content-center items-center">
                 <VexFlowBoard 
@@ -136,7 +146,7 @@ function checkQuizAnswer(isCorrect: boolean) {
                         </div>
                         <div v-if="isFinished" class="flex flex-col items-center">
                             <UButton @click="currentNoteIndex = 0; isFinished = false; feedbackMessage = ''; shuffledOptions = [...lesson.content.options].sort(() => Math.random() - 0.5)" class="opacity-50 ">Play again</UButton>
-                            <UButton to="/" class="m-2">Back to Modules</UButton>
+                            <UButton @click="goToNextLesson">Back to Modules</UButton>
                         </div>
                     </div>
                 </div>
@@ -160,10 +170,8 @@ function checkQuizAnswer(isCorrect: boolean) {
                         {{ option.text }}
                     </UButton>
                 </div>
-                <div v-if="isFinished">
-                    <UButton to="/" class="m-2">Back to Modules</UButton>
-                </div>
+                <UButton @click="goToNextLesson">{{ lesson.nextLessonId ? 'Next Lesson' : 'Back to Modules' }}</UButton>
             </div>
-        </div>
+        </div> -->
     </UCard>
 </template>
