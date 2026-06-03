@@ -63,14 +63,20 @@ async function goToNextLesson() {
 }
 </script>
 <template>
-    <UCard class="h-full flex flex-col">
+    <UCard class="h-full flex flex-col md:min-w-[75%] min-w-full">
         <template #header>
-            <h2 class="text-2xl font-bold">{{ lesson?.title || "Loading"}}</h2>
-            <p class="text-sm text-gray-500">{{ lesson?.type || "Loading"}}</p>
+            <div v-if="lesson?.title">
+                <h2 class="text-2xl font-bold">{{ lesson.title }}</h2>
+                <p class="text-sm text-gray-500">{{ lesson.type }}</p>
+            </div>
+            <div v-else >
+                <USkeleton class="mb-2 h-4 w-full" />
+                <USkeleton class="h-4 w-[10%]" />
+            </div>
         </template>
 
         <div v-if="pending">
-            <p>Loading...</p>
+            <USkeleton class="h-125 w-full" />
         </div>
         <div v-else-if="error">
             <p>Error loading lesson.</p>
