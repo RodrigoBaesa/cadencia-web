@@ -100,7 +100,7 @@ function checkQuizAnswer(isCorrect: boolean) {
 async function goToNextLesson() {
     const lessonData = lesson.value
     if (lessonData?.nextLessonId) {
-        await navigateTo(`/${moduleId}/${lessonData.nextLessonId}`)
+        await navigateTo(`/modules/${moduleId}/${lessonData.nextLessonId}`)
     } else {
         await navigateTo(`/modules/${moduleId}`)
     }
