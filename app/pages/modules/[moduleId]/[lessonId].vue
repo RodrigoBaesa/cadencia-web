@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import QuizLesson from '~/components/lessons/QuizLesson.vue'
+import PracticeLesson from '~/components/lessons/PracticeLesson.vue'
+
 const route = useRoute()
 
 const moduleId = route.params.moduleId
@@ -50,53 +53,6 @@ const { data: lesson, pending, error } = await useFetch<LessonData>(`http://loca
   }
 } */
 
-const currentNoteIndex = ref(0)
-const isFinished = ref(false)
-const feedbackMessage = ref("")
-
-const shuffledOptions = computed(() => {
-    if(!lesson.value || !lesson.value.content.options) return []
-    return [...lesson.value.content.options].sort(() => Math.random() - 0.5)
-})
-
-const currentChallenge = computed(() => {
-    if(!lesson.value || !lesson.value.content.vexFlowData) return null
-    return lesson.value.content.vexFlowData.notes[currentNoteIndex.value]
-})
-
-function checkAnswer(answer: string) {
-    if (!currentChallenge.value || !lesson.value?.content.vexFlowData) return
-    const notes = lesson.value.content.vexFlowData.notes
-
-    if (answer === currentChallenge.value.keys[0]) {
-        feedbackMessage.value = "Correct"
-
-        if (currentNoteIndex.value < notes.length - 1) {
-            setTimeout(() => {
-                currentNoteIndex.value++
-                feedbackMessage.value = ""
-            }, 800)                
-        } else {
-            setTimeout(() => {
-                isFinished.value = true
-                feedbackMessage.value = ""
-            }, 800)
-        }
-    } else {
-        feedbackMessage.value = "Try again!"
-    }
-}
-
-function checkQuizAnswer(isCorrect: boolean) {
-    feedbackMessage.value = isCorrect ? "Correct" : "Try again!"
-    if (isCorrect) {
-        setTimeout(() => {
-            isFinished.value = true
-            feedbackMessage.value = ""
-        }, 1200)
-    }
-}
-
 async function goToNextLesson() {
     const lessonData = lesson.value
     if (lessonData?.nextLessonId) {
@@ -121,65 +77,11 @@ async function goToNextLesson() {
         </div>
 
         <div v-else-if="lesson">
-            <div v-if="lesson.type === 'THEORY'">
-                <p>{{ lesson.content.text }}</p>
-                <img :src="lesson.content.imageUrl" alt="Lesson image" class="mx-auto block max-w-full my-4 rounded" />
-                <UButton @click="goToNextLesson">{{ lesson.nextLessonId ? 'Next Lesson' : 'Back to Modules' }}</UButton>
-            </div>
+            <TheoryLesson :lesson="lesson" :moduleId="moduleId" />
 
-            <div v-if="lesson.type === 'PRACTICE'">
-                <p>{{ lesson.content.instruction }}</p>
-                <div class="flex flex-col justify-center content-center items-center">
-                    <VexFlowBoard 
-                        class="my-4 w-min"
-                        :clef="lesson.content.vexFlowData.clef"
-                        :timeSignature="lesson.content.vexFlowData.timeSignature"
-                        :notes="[currentChallenge]" 
-                        />
-                    
-                    <div>
-                        <p v-if="isFinished" class="text-gray-500">Lesson completed! You've earned <span class="text-primary">{{ lesson.content.rewardXp }} XP!</span></p>
-                        <p v-if="feedbackMessage === '' && !isFinished" class="text-gray-500"> Select the correct note.</p>
-                        <p v-if="feedbackMessage === 'Correct'" class="text-green-500">{{ feedbackMessage }}</p>
-                        <p v-if="feedbackMessage === 'Try again!'" class="text-red-500">{{ feedbackMessage }}</p>
-                    </div>
+            <PracticeLesson :lesson="lesson" :moduleId="moduleId" />
 
-                    <div>
-                        <div class="flex m-4 gap-2">
-                            <div v-if="!isFinished">
-                                <div class="flex flex-wrap justify-center gap-2 mt-4">
-                                    <UButton v-for="option in shuffledOptions" :key="option" @click="checkAnswer(option)">{{ option.toUpperCase() }}</UButton>
-                                </div>
-                            </div>
-                            
-                            <div v-if="isFinished" class="flex flex-col items-center">
-                                <UButton @click="goToNextLesson">Back to Modules</UButton>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <p class="text-sm text-gray-500 flex">Reward:<span class="ml-1 text-primary">{{ lesson.content.rewardXp }} XP</span></p>
-            </div>
-
-            <div v-if="lesson.type === 'QUIZ'">
-                <p>{{ lesson.content.question }}</p>
-                <div class="flex flex-col items-center my-5">
-                    <div>
-                        <p v-if="isFinished" class="text-gray-500">Lesson completed! You've earned <span class="text-primary">{{ lesson.content.rewardXp }} XP!</span></p>
-                        <p v-if="feedbackMessage === '' && !isFinished" class="text-gray-500"> Select the correct note.</p>
-                        <p v-if="feedbackMessage === 'Correct'" class="text-green-500">{{ feedbackMessage }}</p>
-                        <p v-if="feedbackMessage === 'Try again!'" class="text-red-500">{{ feedbackMessage }}</p>
-                    </div>
-                    
-                    <div v-if="!isFinished">
-                        <UButton v-for="option in lesson.content.options" :key="option.text" class="m-2" @click="checkQuizAnswer(option.isCorrect)">
-                            {{ option.text }}
-                        </UButton>
-                    </div>
-                    <UButton @click="goToNextLesson">{{ lesson.nextLessonId ? 'Next Lesson' : 'Back to Modules' }}</UButton>
-                </div>
-            </div>
+            <QuizLesson :lesson="lesson" :moduleId="moduleId" />
         </div>
     </UCard>
 </template>
