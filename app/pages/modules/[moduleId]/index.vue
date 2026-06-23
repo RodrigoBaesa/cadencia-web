@@ -5,24 +5,22 @@ const route = useRoute()
 
 const moduleId = route.params.moduleId
 
+const { data: module, pending, error } = await useFetch<{ lessons: any[] }>(`http://localhost:8080/api/modules/${moduleId}`)
+
 definePageMeta({
     layout: 'default'
 })
 
-const items = ref<TimelineItem[]>([
-    {
-        title: 'Module 1',
-        description: 'Learn about staves and clefs.',
-        icon: 'i-lucide-music',
-        lesson_path: 'lesson-1' 
-    },
-    {
-        title: 'Module 2',
-        description: 'Learn about staves and clefs.',
-        icon: 'i-lucide-music',
-        lesson_path: 'lesson-2'
-    },
-])
+const items = computed<TimelineItem[]>(() => {
+    if (!module.value || !module.value.lessons) return []
+
+    return module.value.lessons.map((lesson:any) => ({
+        title: lesson.title,
+        description: lesson.description,
+        icon: lesson.type === "THEORY" ? "i-lucide-book-open": lesson.type === "PRACTICE" ? "i-lucide-music" : "i-lucide-list-todo",
+        lesson_path: lesson.id
+    }))
+})
 </script>
 
 <template>
