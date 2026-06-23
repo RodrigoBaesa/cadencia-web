@@ -53,14 +53,6 @@ const { data: lesson, pending, error } = await useFetch<LessonData>(`http://loca
   }
 } */
 
-async function goToNextLesson() {
-    const lessonData = lesson.value
-    if (lessonData?.nextLessonId) {
-        await navigateTo(`/modules/${moduleId}/${lessonData.nextLessonId}`)
-    } else {
-        await navigateTo(`/modules/${moduleId}`)
-    }
-}
 </script>
 <template>
     <UCard class="h-full flex flex-col md:min-w-[75%] min-w-full">
