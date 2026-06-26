@@ -3,8 +3,6 @@ import type { NavigationMenuItem, SidebarProps } from '@nuxt/ui'
 
 defineProps<Pick<SidebarProps, 'variant' | 'collapsible' | 'side'>>()
 
-const open = ref(true)
-
 const items: NavigationMenuItem[] = [
     { label: 'Home', icon: 'i-lucide-home', to: '/' },
     { label: 'Daily', icon: 'i-lucide-calendar', to: '/daily' },
@@ -24,7 +22,6 @@ const items: NavigationMenuItem[] = [
   >
     <USidebar
       class=""
-      v-model:open="open"
       :variant="variant"
       :collapsible="collapsible"
       :side="side"
@@ -56,14 +53,6 @@ const items: NavigationMenuItem[] = [
           side === 'right' && 'justify-end'
         ]"
       >
-        <UButton
-          :icon="side === 'left' ? 'i-lucide-panel-left' : 'i-lucide-panel-right'"
-          class="hidden md:flex"
-          color="neutral"
-          variant="ghost"
-          aria-label="Toggle sidebar"
-          @click="open = !open"
-        />
 
         <div class="ml-auto m-1 text-primary">
           <UButton variant="ghost" to="/streak">
