@@ -62,7 +62,7 @@ const goBack = () => {
         <div v-if="router.currentRoute.value.name !== 'index'">
           <div class="flex">
             <UButton variant="ghost" class="cursor-pointer">
-              <UIcon name="i-lucide-move-left" class="size-6"@click="goBack" />
+              <UIcon name="i-lucide-move-left" class="md:size-6 size-8" @click="goBack" />
             </UButton>
           </div>
         </div>
