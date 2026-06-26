@@ -40,7 +40,7 @@ async function loginUser(event) {
     })
 
     await navigateTo('/')
-  } catch (error) {
+  } catch {
     toast.add({
       title: 'Login Failed',
       description: '',
