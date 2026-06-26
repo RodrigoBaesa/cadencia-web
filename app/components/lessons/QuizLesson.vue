@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { useExercise } from '~/composables/useExercise'
 
+interface QuizOption {
+  text: string
+  isCorrect: boolean
+}
+
+interface QuizContent {
+  question: string
+  rewardXp: number
+  options: QuizOption[]
+  [key: string]: unknown
+}
+
 const props = defineProps<{
   lesson: {
     id: string
     title: string
     type: string
     nextLessonId?: string
-    content: any
+    content: QuizContent
   }
-  moduleId?: any
+  moduleId: string
 }>()
 
 const { isFinished, feedbackMessage, checkQuizAnswer, goToNextLesson } = useExercise(props.lesson, props.moduleId)

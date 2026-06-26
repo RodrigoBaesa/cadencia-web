@@ -1,5 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useExercise } from '~/composables/useExercise'
+
+interface VexFlowNote {
+  keys: string[]
+  duration: string
+}
+
+interface VexFlowData {
+  clef: string
+  timeSignature: string
+  notes: VexFlowNote[]
+}
+
+interface PracticeContent {
+  instruction: string
+  rewardXp: number
+  options: string[]
+  vexFlowData: VexFlowData
+  [key: string]: unknown
+}
 
 const props = defineProps<{
   lesson: {
@@ -7,22 +27,24 @@ const props = defineProps<{
     title: string
     type: string
     nextLessonId?: string
-    content: any
+    content: PracticeContent
   }
-  moduleId?: any
+  moduleId: string
 }>()
 
 const { currentChallenge, isFinished, feedbackMessage, checkAnswer, goToNextLesson, shuffledOptions } = useExercise(props.lesson, props.moduleId)
+
+const practiceOptions = computed(() => shuffledOptions.value as string[])
 </script>
 
 <template>
-  <div v-if="lesson.type === 'PRACTICE'">
-    <p>{{ lesson.content.instruction }}</p>
+  <div v-if="props.lesson.type === 'PRACTICE'">
+    <p>{{ props.lesson.content.instruction }}</p>
     <div class="flex flex-col justify-center content-center items-center">
       <VexFlowBoard
         class="my-4 w-min"
-        :clef="lesson.content.vexFlowData.clef"
-        :time-signature="lesson.content.vexFlowData.timeSignature"
+        :clef="props.lesson.content.vexFlowData.clef"
+        :time-signature="props.lesson.content.vexFlowData.timeSignature"
         :notes="[currentChallenge]"
       />
 
@@ -31,7 +53,7 @@ const { currentChallenge, isFinished, feedbackMessage, checkAnswer, goToNextLess
           v-if="isFinished"
           class="text-gray-500"
         >
-          Lesson completed! You've earned <span class="text-primary">{{ lesson.content.rewardXp }} XP!</span>
+          Lesson completed! You've earned <span class="text-primary">{{ props.lesson.content.rewardXp }} XP!</span>
         </p>
         <p
           v-if="feedbackMessage === '' && !isFinished"
@@ -58,7 +80,7 @@ const { currentChallenge, isFinished, feedbackMessage, checkAnswer, goToNextLess
           <div v-if="!isFinished">
             <div class="flex flex-wrap justify-center gap-2 mt-4">
               <UButton
-                v-for="option in shuffledOptions"
+                v-for="option in practiceOptions"
                 :key="option"
                 @click="checkAnswer(option)"
               >
@@ -79,7 +101,7 @@ const { currentChallenge, isFinished, feedbackMessage, checkAnswer, goToNextLess
       </div>
     </div>
     <p class="text-sm text-gray-500 flex">
-      Reward:<span class="ml-1 text-primary">{{ lesson.content.rewardXp }} XP</span>
+      Reward:<span class="ml-1 text-primary">{{ props.lesson.content.rewardXp }} XP</span>
     </p>
   </div>
 </template>
