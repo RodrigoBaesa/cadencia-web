@@ -10,6 +10,12 @@ const items: NavigationMenuItem[] = [
     { label: 'Profile', icon: 'i-lucide-user', to: '/profile' }
 ]
 
+const router = useRouter()
+
+const goBack = () => {
+  router.back()
+}
+
 </script>
 
 <template>
@@ -53,6 +59,13 @@ const items: NavigationMenuItem[] = [
           side === 'right' && 'justify-end'
         ]"
       >
+        <div v-if="router.currentRoute.value.name !== 'index'">
+          <div class="flex">
+            <UButton variant="ghost" class="cursor-pointer">
+              <UIcon name="i-lucide-move-left" class="size-6"@click="goBack" />
+            </UButton>
+          </div>
+        </div>
 
         <div class="ml-auto m-1 text-primary">
           <UButton variant="ghost" to="/streak">
@@ -63,11 +76,12 @@ const items: NavigationMenuItem[] = [
 
       </div>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-8">
-          <div class="flex justify-center">
-            <slot></slot>
-          </div>
-        </main>
+      <main class="flex-1 overflow-y-auto p-4 md:p-8">
+        <div class="flex justify-center">
+          <slot></slot>
+        </div>
+      </main>
+
     </div>
 
     <NavbarMobileBottomNav :items="items" />
