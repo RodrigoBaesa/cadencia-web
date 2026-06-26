@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import QuizLesson from '~/components/lessons/QuizLesson.vue'
 import PracticeLesson from '~/components/lessons/PracticeLesson.vue'
+import TheoryLesson from '~/components/lessons/TheoryLesson.vue'
 
 const route = useRoute()
 
-const moduleId = route.params.moduleId
-const lessonId = route.params.lessonId
+const moduleId = route.params.moduleId as string
+const lessonId = route.params.lessonId as string
 
 interface LessonData {
   id: string
   title: string
   type: string
   nextLessonId?: string
-  content: any
+  content: Record<string, unknown>
 }
 
 const { data: lesson, pending, error } = await useFetch<LessonData>(`http://localhost:8080/api/lessons/${lessonId}`)
+
+const lessonForChildren = computed(() => lesson.value as never)
 
 /* const lesson = {
     id: "lesson-2",
@@ -80,17 +83,17 @@ const { data: lesson, pending, error } = await useFetch<LessonData>(`http://loca
 
     <div v-else-if="lesson">
       <TheoryLesson
-        :lesson="lesson"
+        :lesson="lessonForChildren"
         :module-id="moduleId"
       />
 
       <PracticeLesson
-        :lesson="lesson"
+        :lesson="lessonForChildren"
         :module-id="moduleId"
       />
 
       <QuizLesson
-        :lesson="lesson"
+        :lesson="lessonForChildren"
         :module-id="moduleId"
       />
     </div>

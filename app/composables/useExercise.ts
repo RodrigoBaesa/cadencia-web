@@ -1,11 +1,33 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-type Lesson = {
+interface VexFlowNote {
+  keys: string[]
+  duration: string
+}
+
+interface VexFlowData {
+  notes: VexFlowNote[]
+  clef?: string
+  timeSignature?: string
+}
+
+interface QuizOption {
+  text: string
+  isCorrect: boolean
+}
+
+interface SharedLessonContent {
+  options?: string[] | QuizOption[]
+  vexFlowData?: VexFlowData
+  [key: string]: unknown
+}
+
+export type Lesson = {
   id: string
   title: string
   type: string
   nextLessonId?: string
-  content: any
+  content: SharedLessonContent
 }
 
 export function useExercise(lesson: Lesson, moduleId: string) {

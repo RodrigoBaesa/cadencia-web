@@ -3,9 +3,16 @@ import type { TimelineItem } from '@nuxt/ui'
 
 const route = useRoute()
 
-const moduleId = route.params.moduleId
+const moduleId = route.params.moduleId as string
 
-const { data: module, pending, error } = await useFetch<{ lessons: any[] }>(`http://localhost:8080/api/modules/${moduleId}`)
+interface ModuleLesson {
+  id: string
+  title: string
+  type: string
+  description?: string
+}
+
+const { data: module/* , pending, error */ } = await useFetch<{ lessons: ModuleLesson[] }>(`http://localhost:8080/api/modules/${moduleId}`)
 
 definePageMeta({
   layout: 'default'
@@ -14,9 +21,9 @@ definePageMeta({
 const items = computed<TimelineItem[]>(() => {
   if (!module.value || !module.value.lessons) return []
 
-  return module.value.lessons.map((lesson: any) => ({
+  return module.value.lessons.map((lesson: ModuleLesson) => ({
     title: lesson.title,
-    description: lesson.description,
+    description: lesson.description || lesson.type,
     icon: lesson.type === 'THEORY' ? 'i-lucide-book-open' : lesson.type === 'PRACTICE' ? 'i-lucide-music' : 'i-lucide-list-todo',
     lesson_path: lesson.id
   }))

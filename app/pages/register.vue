@@ -26,7 +26,7 @@ const formState = reactive({
 
 async function registerUser(event) {
   try {
-    const response = await $fetch('http://localhost:8080/users', {
+    await $fetch('http://localhost:8080/users', {
       method: 'POST',
       body: event.data
     })
@@ -38,8 +38,8 @@ async function registerUser(event) {
     })
 
     await navigateTo('/login')
-  } catch (error) {
-    const errorMessage = error.data?.message || 'An error occurred while registering. Please try again.'
+  } catch (_error) {
+    const errorMessage = _error.data?.message || 'An error occurred while registering. Please try again.'
 
     toast.add({
       title: 'Registration Failed',
