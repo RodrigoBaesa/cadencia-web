@@ -8,11 +8,11 @@ const moduleId = route.params.moduleId
 const lessonId = route.params.lessonId
 
 interface LessonData {
-    id: string
-    title: string
-    type: string
-    nextLessonId?: string
-    content: any
+  id: string
+  title: string
+  type: string
+  nextLessonId?: string
+  content: any
 }
 
 const { data: lesson, pending, error } = await useFetch<LessonData>(`http://localhost:8080/api/lessons/${lessonId}`)
@@ -52,34 +52,47 @@ const { data: lesson, pending, error } = await useFetch<LessonData>(`http://loca
     rewardXp: 100
   }
 } */
-
 </script>
+
 <template>
-    <UCard class="h-full flex flex-col md:min-w-[75%] min-w-full">
-        <template #header>
-            <div v-if="lesson?.title">
-                <h2 class="text-2xl font-bold">{{ lesson.title }}</h2>
-                <p class="text-sm text-gray-500">{{ lesson.type }}</p>
-            </div>
-            <div v-else >
-                <USkeleton class="mb-2 h-4 w-full" />
-                <USkeleton class="h-4 w-[10%]" />
-            </div>
-        </template>
+  <UCard class="h-full flex flex-col md:min-w-[75%] min-w-full">
+    <template #header>
+      <div v-if="lesson?.title">
+        <h2 class="text-2xl font-bold">
+          {{ lesson.title }}
+        </h2>
+        <p class="text-sm text-gray-500">
+          {{ lesson.type }}
+        </p>
+      </div>
+      <div v-else>
+        <USkeleton class="mb-2 h-4 w-full" />
+        <USkeleton class="h-4 w-[10%]" />
+      </div>
+    </template>
 
-        <div v-if="pending">
-            <USkeleton class="h-125 w-full" />
-        </div>
-        <div v-else-if="error">
-            <p>Error loading lesson.</p>
-        </div>
+    <div v-if="pending">
+      <USkeleton class="h-125 w-full" />
+    </div>
+    <div v-else-if="error">
+      <p>Error loading lesson.</p>
+    </div>
 
-        <div v-else-if="lesson">
-            <TheoryLesson :lesson="lesson" :moduleId="moduleId" />
+    <div v-else-if="lesson">
+      <TheoryLesson
+        :lesson="lesson"
+        :module-id="moduleId"
+      />
 
-            <PracticeLesson :lesson="lesson" :moduleId="moduleId" />
+      <PracticeLesson
+        :lesson="lesson"
+        :module-id="moduleId"
+      />
 
-            <QuizLesson :lesson="lesson" :moduleId="moduleId" />
-        </div>
-    </UCard>
+      <QuizLesson
+        :lesson="lesson"
+        :module-id="moduleId"
+      />
+    </div>
+  </UCard>
 </template>

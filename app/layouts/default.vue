@@ -4,10 +4,10 @@ import type { NavigationMenuItem, SidebarProps } from '@nuxt/ui'
 defineProps<Pick<SidebarProps, 'variant' | 'collapsible' | 'side'>>()
 
 const items: NavigationMenuItem[] = [
-    { label: 'Home', icon: 'i-lucide-home', to: '/' },
-    { label: 'Daily', icon: 'i-lucide-calendar', to: '/daily' },
-    { label: 'Battle', icon: 'i-lucide-sword', to: '/battle' },
-    { label: 'Profile', icon: 'i-lucide-user', to: '/profile' }
+  { label: 'Home', icon: 'i-lucide-home', to: '/' },
+  { label: 'Daily', icon: 'i-lucide-calendar', to: '/daily' },
+  { label: 'Battle', icon: 'i-lucide-sword', to: '/battle' },
+  { label: 'Profile', icon: 'i-lucide-user', to: '/profile' }
 ]
 
 const router = useRouter()
@@ -15,7 +15,6 @@ const router = useRouter()
 const goBack = () => {
   router.back()
 }
-
 </script>
 
 <template>
@@ -61,30 +60,40 @@ const goBack = () => {
       >
         <div v-if="router.currentRoute.value.name !== 'index'">
           <div class="flex">
-            <UButton variant="ghost" class="cursor-pointer">
-              <UIcon name="i-lucide-move-left" class="md:size-6 size-8" @click="goBack" />
+            <UButton
+              variant="ghost"
+              class="cursor-pointer"
+            >
+              <UIcon
+                name="i-lucide-move-left"
+                class="md:size-6 size-8"
+                @click="goBack"
+              />
             </UButton>
           </div>
         </div>
 
         <div class="ml-auto m-1 text-primary">
-          <UButton variant="ghost" to="/streak">
+          <UButton
+            variant="ghost"
+            to="/streak"
+          >
             <span class="flex text-lg font-bold">0</span>
-            <UIcon name="i-lucide-flame" class="size-10 mb-1" />
+            <UIcon
+              name="i-lucide-flame"
+              class="size-10 mb-1"
+            />
           </UButton>
         </div>
-
       </div>
 
       <main class="flex-1 overflow-y-auto p-4 md:p-8">
         <div class="flex justify-center">
-          <slot></slot>
+          <slot />
         </div>
       </main>
-
     </div>
 
     <NavbarMobileBottomNav :items="items" />
-
   </div>
 </template>

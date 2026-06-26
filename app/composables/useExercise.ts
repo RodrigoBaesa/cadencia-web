@@ -1,68 +1,68 @@
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 type Lesson = {
-        id: string
-        title: string
-        type: string
-        nextLessonId?: string
-        content: any
-    }
-    
+  id: string
+  title: string
+  type: string
+  nextLessonId?: string
+  content: any
+}
+
 export function useExercise(lesson: Lesson, moduleId: string) {
-    const isFinished = ref(false)
-    const feedbackMessage = ref("")
-    const currentNoteIndex = ref(0)
+  const isFinished = ref(false)
+  const feedbackMessage = ref('')
+  const currentNoteIndex = ref(0)
 
-    const currentChallenge = computed(() => {
-        if(!lesson || !lesson.content.vexFlowData) return null
-        return lesson.content.vexFlowData.notes[currentNoteIndex.value]
-    })
+  const currentChallenge = computed(() => {
+    if (!lesson || !lesson.content.vexFlowData) return null
+    return lesson.content.vexFlowData.notes[currentNoteIndex.value]
+  })
 
-    const shuffledOptions = computed(() => {
-        if(!lesson || !lesson.content.options) return []
-        return [...lesson.content.options].sort(() => Math.random() - 0.5)
-    })
+  const shuffledOptions = computed(() => {
+    if (!lesson || !lesson.content.options) return []
+    return [...lesson.content.options].sort(() => Math.random() - 0.5)
+  })
 
-    function checkQuizAnswer(isCorrect: boolean) {
-        feedbackMessage.value = isCorrect ? "Correct" : "Try again!"
-        if (isCorrect) {
-            setTimeout(() => {
-                isFinished.value = true
-                feedbackMessage.value = ""
-            }, 1200)
-        }
+  function checkQuizAnswer(isCorrect: boolean) {
+    feedbackMessage.value = isCorrect ? 'Correct' : 'Try again!'
+    if (isCorrect) {
+      setTimeout(() => {
+        isFinished.value = true
+        feedbackMessage.value = ''
+      }, 1200)
     }
+  }
 
-    async function goToNextLesson() {
-        if (lesson.nextLessonId) {
-            await navigateTo(`/modules/${moduleId}/${lesson.nextLessonId}`)
-        } else {
-            await navigateTo(`/modules/${moduleId}`)
-        }
+  async function goToNextLesson() {
+    if (lesson.nextLessonId) {
+      await navigateTo(`/modules/${moduleId}/${lesson.nextLessonId}`)
+    } else {
+      await navigateTo(`/modules/${moduleId}`)
     }
+  }
 
-    function checkAnswer(answer: string) {
-        if (!currentChallenge.value || !lesson.content.vexFlowData) return
-        const notes = lesson.content.vexFlowData.notes
+  function checkAnswer(answer: string) {
+    if (!currentChallenge.value || !lesson.content.vexFlowData) return
+    const notes = lesson.content.vexFlowData.notes
 
-        if (answer === currentChallenge.value.keys[0]) {
-            feedbackMessage.value = "Correct"
+    if (answer === currentChallenge.value.keys[0]) {
+      feedbackMessage.value = 'Correct'
 
-            if (currentNoteIndex.value < notes.length - 1) {
-                setTimeout(() => {
-                    currentNoteIndex.value++
-                    feedbackMessage.value = ""
-                }, 800)                
-            } else {
-                setTimeout(() => {
-                    isFinished.value = true
-                    feedbackMessage.value = ""
-                }, 800)
-            }
-        } else {
-            feedbackMessage.value = "Try again!"
-        }
+      if (currentNoteIndex.value < notes.length - 1) {
+        setTimeout(() => {
+          currentNoteIndex.value++
+          feedbackMessage.value = ''
+        }, 800)
+      } else {
+        setTimeout(() => {
+          isFinished.value = true
+          feedbackMessage.value = ''
+        }, 800)
+      }
+    } else {
+      feedbackMessage.value = 'Try again!'
     }
+  }
 
-    return { isFinished, feedbackMessage, checkQuizAnswer, goToNextLesson, checkAnswer, currentChallenge, shuffledOptions }
+  return { isFinished, feedbackMessage, checkQuizAnswer, goToNextLesson, checkAnswer, currentChallenge, shuffledOptions }
 }

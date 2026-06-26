@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const show = ref(false)
-const model = defineModel<string>({default: ''})
+const model = defineModel<string>({ default: '' })
 
 function checkStrength(str: string) {
   const requirements = [
@@ -70,18 +70,27 @@ const text = computed(() => {
       size="sm"
     />
 
-    <p id="password-strength" class="text-sm font-medium">
+    <p
+      id="password-strength"
+      class="text-sm font-medium"
+    >
       {{ text }}. Must contain:
     </p>
 
-    <ul class="space-y-1" aria-label="Password requirements">
+    <ul
+      class="space-y-1"
+      aria-label="Password requirements"
+    >
       <li
         v-for="(req, index) in strength"
         :key="index"
         class="flex items-center gap-0.5"
         :class="req.met ? 'text-success' : 'text-muted'"
       >
-        <UIcon :name="req.met ? 'i-lucide-music' : 'i-lucide-music'" class="size-4 shrink-0" />
+        <UIcon
+          :name="req.met ? 'i-lucide-music' : 'i-lucide-music'"
+          class="size-4 shrink-0"
+        />
 
         <span class="text-xs font-light">
           {{ req.text }}
@@ -93,4 +102,3 @@ const text = computed(() => {
     </ul>
   </div>
 </template>
-
